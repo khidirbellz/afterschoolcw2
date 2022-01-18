@@ -49,3 +49,9 @@ app.post("/:collName", (request, response, next) => {
         response.send(res.ops);
     });
 })
+//make port
+const port = process.env.PORT || 8000;
+//run the server
+app.listen(port, () => {
+    console.log(`running on port ${port}`);
+})
