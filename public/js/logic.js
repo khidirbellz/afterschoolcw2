@@ -123,6 +123,21 @@ const app = new Vue({
 
     checkout() {
       let msg = `Thanks ${this.person.name} your total price is .. (₦ ${this.total} naira only)`;
+      //post checkout information to orders collection
+      fetch('https://kidocw2.herokuapp.com/orders', {
+        method: 'POST', // set the HTTP method as 'POST'
+        headers: {
+            'Content-Type': 'application/json', // set the data type as JSON
+        },
+        mode: "cors",
+        cache: "no-store",
+        body: JSON.stringify(app.person), // need to stringify the JSON object
+    })
+    .then(response => response.json())
+    .then(responseJSON => {})
+    .catch((error) => {
+        console.log(error);
+    });
       alert(msg);
       this.resetVariable();
     },
