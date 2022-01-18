@@ -1,0 +1,24 @@
+{
+  "name": "khidir",
+  "version": "1.0.0",
+  "description": "",
+  "main": "node app.js",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongodb": "^4.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khidirbellz/afterschoolcw2.git"
+  },
+  "author": "khidir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khidirbellz/afterschoolcw2/issues"
+  },
+  "homepage": "https://github.com/khidirbellz/afterschoolcw2#readme"
+}
