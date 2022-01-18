@@ -1,5 +1,4 @@
-const app = new Vue({
-  el: '#app',
+const app = Vue.createApp({
   data() {
     return {
       search: "",
@@ -44,18 +43,101 @@ const app = new Vue({
           sign: "-",
         },
       ],
-     courses:[],
+      lessons: [],
+      // lessons: [
+      //   {
+      //     id: 1,
+      //     img: "https://img.icons8.com/external-flat-icons-maxicons/85/000000/external-biology-faculty-flat-flat-icons-maxicons.png",
+      //     subject: "BIOLOGY",
+      //     location: "Minnesota",
+      //     price: 5000,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 2,
+      //     img: "https://img.icons8.com/external-prettycons-flat-prettycons/85/000000/external-maths-education-prettycons-flat-prettycons-1.png",
+      //     subject: "MATHS",
+      //     location: "Mississippi",
+      //     price: 2100,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 3,
+      //     img: "https://img.icons8.com/external-prettycons-lineal-color-prettycons/85/000000/external-chemistry-education-prettycons-lineal-color-prettycons.png",
+      //     subject: "CHEMISTRY",
+      //     location: "LONDON",
+      //     price: 5400,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 4,
+      //     img: "https://img.icons8.com/color/85/000000/language.png",
+      //     subject: "Language",
+      //     location: "NEW YORK",
+      //     price: 80,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 5,
+      //     img: "https://img.icons8.com/external-flatarticons-blue-flatarticons/85/000000/external-violin-valentines-day-flatarticons-blue-flatarticons.png",
+      //     subject: "MUSIC",
+      //     location: "BRISTOL",
+      //     price: 900,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 6,
+      //     img: "https://img.icons8.com/external-flat-icons-pause-08/100/000000/external-chemistry-education-flat-icons-pause-08.png",
+      //     subject: "CHEMISTRY",
+      //     location: "Manchester",
+      //     price: 70,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 7,
+      //     img: "https://img.icons8.com/external-justicon-lineal-color-justicon/85/000000/external-football-sport-justicon-lineal-color-justicon.png",
+      //     subject: "FOOTBALL",
+      //     location: "Brazil",
+      //     price: 2220,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 8,
+      //     img: "https://img.icons8.com/external-justicon-lineal-color-justicon/85/000000/external-cricket-sport-justicon-lineal-color-justicon.png",
+      //     subject: "CRICKET",
+      //     location: "INDIA",
+      //     price: 5100,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 9,
+      //     img: "https://img.icons8.com/external-becris-flat-becris/85/000000/external-art-literary-genres-becris-flat-becris.png",
+      //     subject: "ART & CRAFT",
+      //     location: "Accra",
+      //     price: 9000,
+      //     spaces: 5,
+      //   },
+      //   {
+      //     id: 10,
+      //     img: "https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/85/000000/external-geography-geography-icongeek26-linear-colour-icongeek26.png",
+      //     subject: "Geography",
+      //     location: "Russia",
+      //     price: 4020,
+      //     spaces: 5,
+      //   }
+      // ],
       cart: [],
       total: 0,
     };
   },
-  created: function () {
+  created () {
+    const vm = this
     console.log("getting lessons from the server...");
     fetch("https://kidocw2.herokuapp.com/lessons").then(
         function (res) {
             res.json().then(
                 function (json) {
-                    app.courses = json;
+                    vm.lessons = json;
                 }
             )
         }
@@ -64,26 +146,24 @@ const app = new Vue({
 
   methods: {
     addToCart(course) {
-      // console.log(course.spaces)
       if(course.spaces > 0){
         this.cart.push(course);
         this.total += course.price;
         course.spaces--;
       }
     },
-    showCheckout() {
-      // let cart = document.getElementById("cart-items");
-      // let checkout = document.getElementById("checkout");
-      // if (checkout.style = "display:none") {
-      //     checkout.classList.add("checkout");
-      //     cart.classList.remove("col-lg-12");
-      //     cart.classList.add("col-lg-8");
-      //     checkout.classList.add("col-lg-4");
-      //     checkout.classList.add("col-sm-12");
-      //     checkout.style = "display:block";
-      //     document.getElementById("checkout-btn").style = "display:none";
-      // }
-      },
+    showModal(){
+      document.getElementById('ogmodal').classList.toggle('is-active')
+    },
+    checkoutModal(){
+      document.getElementById('checkout-modal').classList.toggle('is-active')
+    },
+    closeOgModal(){
+      document.getElementById('ogmodal').classList.remove('is-active')
+    },
+    closeModal(){
+      document.getElementById('checkout-modal').classList.remove('is-active')
+    },
 
     searching(event) {
       let value = event.target.value.toLowerCase();
@@ -123,21 +203,6 @@ const app = new Vue({
 
     checkout() {
       let msg = `Thanks ${this.person.name} your total price is .. (₦ ${this.total} naira only)`;
-      //post checkout information to orders collection
-      fetch('https://kidocw2.herokuapp.com/orders', {
-        method: 'POST', // set the HTTP method as 'POST'
-        headers: {
-            'Content-Type': 'application/json', // set the data type as JSON
-        },
-        mode: "cors",
-        cache: "no-store",
-        body: JSON.stringify(app.person), // need to stringify the JSON object
-    })
-    .then(response => response.json())
-    .then(responseJSON => {})
-    .catch((error) => {
-        console.log(error);
-    });
       alert(msg);
       this.resetVariable();
     },
@@ -211,8 +276,10 @@ const app = new Vue({
         filter = "spaces";
       }
 
-      this.courses = this.courses.sort(this.dynamicSort(sign + filter));
+      this.lessons = this.lessons.sort(this.dynamicSort(sign + filter));
     },
   },
-})
-// app.mount("#app");
+  
+});
+
+app.mount("#app");
