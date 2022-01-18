@@ -13,3 +13,18 @@ app.use((request, response, next) => {
     response.setHeader("Access-Control-Allow-Origin", "*")
     next();
 });
+//connect to the mongo
+const MongoClient = require("mongodb").MongoClient;
+//create database instance
+let database;
+//connect to cluster
+MongoClient.connect("mongodb+srv://kido:kido@cluster0.ustub.mongodb.net",(err, cli) => {
+    //connect to the database
+    database = cli.db("afterschool");
+});
+//make the collection name a parameter
+app.param("collName", (request, response, next, collName) => {
+    request.collection = database.collection(collName);
+    console.log("collection name:", request.collection);
+    return next();
+});
