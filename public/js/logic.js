@@ -7,8 +7,7 @@ const app = Vue.createApp({
         phone: null,
       },
       sitename: "After School Activities",
-      filters: [
-        {
+      filters: [{
           id: 1,
           name: "Subject",
           checked: true,
@@ -29,8 +28,7 @@ const app = Vue.createApp({
           checked: false,
         },
       ],
-      secondary_filters: [
-        {
+      secondary_filters: [{
           id: 1,
           name: "Ascending",
           sign: "",
@@ -130,38 +128,38 @@ const app = Vue.createApp({
       total: 0,
     };
   },
-  created () {
+  created() {
     const vm = this
     console.log("getting lessons from the server...");
     fetch("https://kidocw2.herokuapp.com/lessons").then(
-        function (res) {
-            res.json().then(
-                function (json) {
-                    vm.lessons = json;
-                }
-            )
-        }
+      function (res) {
+        res.json().then(
+          function (json) {
+            vm.lessons = json;
+          }
+        )
+      }
     )
-},
+  },
 
   methods: {
     addToCart(course) {
-      if(course.spaces > 0){
+      if (course.spaces > 0) {
         this.cart.push(course);
         this.total += course.price;
         course.spaces--;
       }
     },
-    showModal(){
+    showModal() {
       document.getElementById('ogmodal').classList.toggle('is-active')
     },
-    checkoutModal(){
+    checkoutModal() {
       document.getElementById('checkout-modal').classList.toggle('is-active')
     },
-    closeOgModal(){
+    closeOgModal() {
       document.getElementById('ogmodal').classList.remove('is-active')
     },
-    closeModal(){
+    closeModal() {
       document.getElementById('checkout-modal').classList.remove('is-active')
     },
 
@@ -202,9 +200,24 @@ const app = Vue.createApp({
     },
 
     checkout() {
-      let msg = `Thanks ${this.person.name} your total price is .. (₦ ${this.total} naira only)`;
+      const vm = this
+      let msg = `Thanks ${vm.person.name} your total price is .. (₦ ${vm.total} naira only)`;
       alert(msg);
-      this.resetVariable();
+      vm.resetVariable();
+      fetch('https://kidocw2.herokuapp.com/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          mode: "cors",
+          cache: "no-store",
+          body: JSON.stringify(vm.person),
+        })
+        .then(response => response.json())
+        .then(responseJSON => {})
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     stopNumericInput(event) {
@@ -279,7 +292,7 @@ const app = Vue.createApp({
       this.lessons = this.lessons.sort(this.dynamicSort(sign + filter));
     },
   },
-  
+
 });
 
 app.mount("#app");
