@@ -28,3 +28,24 @@ app.param("collName", (request, response, next, collName) => {
     console.log("collection name:", request.collection);
     return next();
 });
+// route to GET index page
+app.get("/", (request, response, next) => {
+    response.render("index.html");
+    next();
+});
+
+// route to GET all items in a collection
+app.get("/:collName", (request, response, next) => {
+    request.collection.find({}).toArray((err, res) => {
+        if (err) return next(err);
+        response.send(res);
+    })
+});
+
+//route to POST items to collection
+app.post("/:collName", (request, response, next) => {
+    request.collection.insert(request.body, (err, res) => {
+        if (err) return next(err);
+        response.send(res.ops);
+    });
+})
